@@ -12,6 +12,7 @@
     <PackageProjectUrl>https://github.com/SebastianDevelops/PinataNET</PackageProjectUrl>
     <RepositoryUrl>https://github.com/SebastianDevelops/PinataNET</RepositoryUrl>
     <PackageTags>pinata,ipfs</PackageTags>
+    <Version>1.0.1</Version>
   </PropertyGroup>
 
   <ItemGroup>

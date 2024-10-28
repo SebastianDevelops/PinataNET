@@ -28,7 +28,7 @@ namespace PinataNET
         /// </summary>
         /// <param name="filePath"></param>
         /// <returns></returns>
-        public async Task PinFileToIPFSAsync(string filePath)
+        public async Task<PinFileResponse> PinFileToIPFSAsync(string filePath)
         {
             try
             {
@@ -55,8 +55,8 @@ namespace PinataNET
                     // Check for success and read response
                     if (response.IsSuccessStatusCode)
                     {
-                        var responseData = await response.Content.ReadAsStringAsync();
-                        Console.WriteLine(responseData); // Output the response
+                        var responseContent = await response.Content.ReadAsStringAsync();
+                        return JsonConvert.DeserializeObject<PinFileResponse>(responseContent);
                     }
                     else
                     {
@@ -67,6 +67,7 @@ namespace PinataNET
             catch (Exception ex)
             {
                 Console.WriteLine($"Error: {ex.Message}");
+                throw;
             }
         }
 
