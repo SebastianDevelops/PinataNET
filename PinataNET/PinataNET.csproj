@@ -1,9 +1,17 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net7.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <Title>PinataNET</Title>
+    <Authors>Sebastian Van Rooyen</Authors>
+    <Company />
+    <Description>Simple c# wrapper for the Pinata api</Description>
+    <PackageProjectUrl>https://github.com/SebastianDevelops/PinataNET</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/SebastianDevelops/PinataNET</RepositoryUrl>
+    <PackageTags>pinata,ipfs</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>

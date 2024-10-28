@@ -28,22 +28,45 @@ namespace PinataNET
         /// </summary>
         /// <param name="filePath"></param>
         /// <returns></returns>
-        public async Task<PinFileResponse> PinFileToIPFSAsync(string filePath)
+        public async Task PinFileToIPFSAsync(string filePath)
         {
-            var fileBytes = File.ReadAllBytes(filePath);
-            var fileContent = new ByteArrayContent(fileBytes);
-            fileContent.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
-
-            var response = await _httpClient.PostAsync("https://api.pinata.cloud/pinning/pinFileToIPFS", fileContent);
-
-            if (response.IsSuccessStatusCode)
+            try
             {
-                var responseContent = await response.Content.ReadAsStringAsync();
-                return JsonConvert.DeserializeObject<PinFileResponse>(responseContent);
+                // Read the file contents
+                using (var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
+                {
+                    var mimeType = MimeTypesMap.GetMimeType(filePath);
+                    var fileContent = new StreamContent(stream);
+                    fileContent.Headers.ContentType = new MediaTypeHeaderValue(mimeType);
+
+                    var formData = new MultipartFormDataContent();
+                    formData.Add(fileContent, "file", Path.GetFileName(filePath));
+
+                    // Prepare the request
+                    var request = new HttpRequestMessage(HttpMethod.Post, "https://api.pinata.cloud/pinning/pinFileToIPFS")
+                    {
+                        Headers = { Authorization = new AuthenticationHeaderValue("Bearer", _jwt) },
+                        Content = formData
+                    };
+
+                    // Send the request
+                    var response = await _httpClient.SendAsync(request);
+
+                    // Check for success and read response
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var responseData = await response.Content.ReadAsStringAsync();
+                        Console.WriteLine(responseData); // Output the response
+                    }
+                    else
+                    {
+                        throw new Exception($"Failed to pin file: {response.ReasonPhrase}");
+                    }
+                }
             }
-            else
+            catch (Exception ex)
             {
-                throw new JsonException($"Failed to pin file: {response.ReasonPhrase}");
+                Console.WriteLine($"Error: {ex.Message}");
             }
         }
 
